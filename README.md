@@ -33,3 +33,7 @@ Filtrage par:
 - Code APE (Restaurants): http://api.cquest.org/sirene?lat=47.86&lon=3.40&dist=1000&apet=56.10
 
 Le résultat est au format GeoJSON.
+
+## Exemple d'utilisation
+
+Carte uMap des restaurants, boulangeries, débits de boissons: https://umap.openstreetmap.fr/fr/map/demo-apicquestorgsirene_509001#17/48.80908/2.47509
