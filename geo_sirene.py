@@ -15,7 +15,7 @@ class geo_sirene(object):
         cur = db.cursor()
 
         where = ''
-        where2 = ''
+        where2 = b''
 
         siret = req.params.get('siret', None)
         if siret and len(siret) == 14:
@@ -27,7 +27,7 @@ class geo_sirene(object):
 
         ape = req.params.get('ape', None)
         if ape:
-            where2 = cur.mogrify(
+            where2 = where2 + cur.mogrify(
                 ' AND activiteprincipaleetablissement LIKE %s ', (ape+'%',))
 
         lat = req.params.get('lat', None)
@@ -42,11 +42,11 @@ select json_build_object('source', %s, 'derniere_maj', %s, 'licence', %s,
     'features', case when count(*)=0 then array[]::json[] else array_agg(json_build_object('type','Feature',
                                             'properties',json_strip_nulls(row_to_json(r)),
                                             'geometry',st_asgeojson(geom,6,0)::json)) end )::text
-from siret r
+from (select coalesce(denominationusuelleetablissement,enseigne1etablissement, denominationunitelegale, denominationusuelle1unitelegale) as name, * from siret natural join siren
 where st_buffer(st_setsrid(st_makepoint(%s, %s),4326)::geography, %s)::geometry && geom
     AND ST_DWithin(st_setsrid(st_makepoint(%s, %s),4326)::geography, geom::geography, %s)
-    AND etatadministratifetablissement='A' 
-""", (SOURCE, DERNIER_MILLESIME, LICENCE, lon, lat, dist, lon, lat, dist)) + where2
+    AND etatadministratifetablissement='A'
+""", (SOURCE, DERNIER_MILLESIME, LICENCE, lon, lat, dist, lon, lat, dist)) + where2 + b') r'
         else:
             query = None
 
@@ -56,7 +56,7 @@ where st_buffer(st_setsrid(st_makepoint(%s, %s),4326)::geography, %s)::geometry 
 select json_build_object('source', %s, 'derniere_maj', %s, 'licence', %s,
     'nb_resultats', count(r),
     'resultats',array_to_json(array_agg(r)))::text
-from (select * from siret
+from (select coalesce(denominationusuelleetablissement,enseigne1etablissement, denominationunitelegale, denominationusuelle1unitelegale) as name, * from siret natural join siren
         where etatadministratifetablissement='A' """ + where.decode('utf8') + where2.decode('utf8') + """ ) r
 """, (SOURCE, DERNIER_MILLESIME, LICENCE))
 
