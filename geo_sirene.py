@@ -24,7 +24,7 @@ class geo_sirene(object):
 
         siren = req.params.get('siren', None)
         if siren and len(siren) == 9:
-            where = cur.mogrify(' AND siren = %s ', (siren,))
+            where = cur.mogrify(' AND siren.siren = %s ', (siren,))
 
         ape = req.params.get('ape', None)
         if ape:
