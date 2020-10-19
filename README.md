@@ -24,12 +24,17 @@ Téléchargement et import des données :
 
 ## Paramètres reconnus par l'API
 
+Codes SIREN ou SIRET:
+- SIREN (entreprise): http://api.cquest.org/sirene?siren=377607825
+- SIRET (établissement): http://api.cquest.org/sirene?siret=37760782500017
+
+
 Sélection par proximité géographique:
 - distance de 100m: http://api.cquest.org/sirene?lat=47.86&lon=3.40&dist=1000
 - distance par défaut de 500m: http://api.cquest.org/sirene?lat=47.86&lon=3.40
+- recherche par bounding box: http://api.cquest.org/sirene?bbox=2.3500,48.8500,2.3501,48.8501 (xmin,ymin,xmax,ymax)
 
-
-Filtrage par:
+Filtrage possible par:
 - Code APE (Restaurants): http://api.cquest.org/sirene?lat=47.86&lon=3.40&dist=1000&apet=56.10
 
 Le résultat est au format GeoJSON.
